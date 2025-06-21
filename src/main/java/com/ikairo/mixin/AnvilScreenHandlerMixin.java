@@ -46,8 +46,9 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
         return 0;
     }
 
+    @Shadow
     @Final
-    private final Property levelCost = Property.create();
+    private  Property levelCost;
 
     public AnvilScreenHandlerMixin(int syncId, PlayerInventory inventory) {
         super(null, syncId, inventory, null, null);
@@ -70,8 +71,6 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
             int nameCost = 0;
             ItemStack result = slot2.copy();
             ItemEnchantmentsComponent.Builder resultEnchants = new ItemEnchantmentsComponent.Builder(EnchantmentHelper.getEnchantments(result));
-//            baseCost += (long)(Integer) slot1.getOrDefault(DataComponentTypes.REPAIR_COST, 0) + (long)(Integer) slot2.getOrDefault(DataComponentTypes.REPAIR_COST, 0); //this can probably just be 0
-            this.repairItemUsage = 0; //this can probably be removed
             if (!slot2.isEmpty()) {
 
                 ItemEnchantmentsComponent slot2Enchants = EnchantmentHelper.getEnchantments(slot2);
