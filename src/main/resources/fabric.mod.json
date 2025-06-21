@@ -2,14 +2,14 @@
 	"schemaVersion": 1,
 	"id": "simplecopy",
 	"version": "${version}",
-	"name": "simplecopy",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "simpleCopy",
+	"description": "This mod let's you copy enchanted books in an anvil.",
 	"authors": [
 		"Me!"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/Ikairo-dev/simplecopy"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/simplecopy/icon.png",
