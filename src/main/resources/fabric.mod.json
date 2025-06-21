@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "simplecopy",
 	"version": "${version}",
-	"name": "simpleCopy",
+	"name": "Simple Copy",
 	"description": "This mod let's you copy enchanted books in an anvil.",
 	"authors": [
 		"Me!"
