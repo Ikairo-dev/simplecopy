@@ -5,13 +5,12 @@
 	"name": "Simple Copy",
 	"description": "This mod let's you copy enchanted books in an anvil.",
 	"authors": [
-		"Me!"
+		"iKairo"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/Ikairo-dev/simplecopy"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/simplecopy/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -34,8 +33,5 @@
 		"minecraft": "~1.21.6",
 		"java": ">=21",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }
