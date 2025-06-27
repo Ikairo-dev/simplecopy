@@ -13,14 +13,6 @@
 	"license": "MIT",
 	"icon": "assets/simplecopy/icon.png",
 	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.ikairo.Simplecopy"
-		],
-		"client": [
-			"com.ikairo.SimplecopyClient"
-		]
-	},
 	"mixins": [
 		"simplecopy.mixins.json",
 		{
