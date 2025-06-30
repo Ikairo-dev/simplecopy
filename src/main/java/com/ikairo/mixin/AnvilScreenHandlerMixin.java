@@ -37,14 +37,19 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @Unique
     private boolean isDuplicating;
 
+    @Unique
+    private boolean isRemovingItem;
+
     public AnvilScreenHandlerMixin(int syncId, PlayerInventory inventory) {
         super(null, syncId, inventory, null);
     }
 
     @Inject(method = "updateResult()V", at = @At("HEAD"))
     protected void checkIsDuplicating(CallbackInfo ci) {
-        isDuplicating = this.input.getStack(0).isOf(Items.BOOK)
-                        && !EnchantedBookItem.getEnchantmentNbt(this.input.getStack(1)).isEmpty();
+        if (!isRemovingItem) {
+            isDuplicating = this.input.getStack(0).isOf(Items.BOOK)
+                    && !EnchantedBookItem.getEnchantmentNbt(this.input.getStack(1)).isEmpty();
+        }
     }
 
     @Redirect(method = "updateResult()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getCount()I"))
@@ -67,7 +72,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Inject(method = "updateResult()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/CraftingResultInventory;setStack(ILnet/minecraft/item/ItemStack;)V", shift = At.Shift.AFTER))
     private void afterSetResult(CallbackInfo ci) {
-        if (isDuplicating) {
+        if (isDuplicating && (!isRemovingItem || this.input.getStack(0).isOf(Items.BOOK))) {
             ItemStack result = this.input.getStack(1).copy();
 
             if (!StringUtils.isBlank(this.newItemName)
@@ -82,20 +87,29 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
 
     @Redirect(method = "onTakeOutput", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V", ordinal = 0))
     private void decrementWhenDuplicating(Inventory instance, int i, ItemStack itemStack) {
+        this.isRemovingItem = true;
         if (this.input.getStack(0).getCount() > 1 && this.input.getStack(0).isOf(Items.BOOK) && !this.input.getStack(1).isEmpty()) {
             if (player instanceof ServerPlayerEntity) {
                 this.input.getStack(0).decrement(1);
             }
+            this.updateResult();
         } else {
             this.input.setStack(0, ItemStack.EMPTY);
         }
-        this.updateResult();
+        this.isRemovingItem = false;
     }
 
     @Redirect(method = "onTakeOutput", at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/Inventory;setStack(ILnet/minecraft/item/ItemStack;)V", ordinal = 3))
     private void doNotSetInputSlot2Empty(Inventory instance, int i, ItemStack itemStack) {
         if (!isDuplicating) {
             this.input.setStack(1, ItemStack.EMPTY);
+        }
+    }
+
+    @Redirect(method = "onTakeOutput", at = @At(value = "INVOKE", target = "Lnet/minecraft/screen/Property;set(I)V"))
+    private void doNotResetLevelCost(Property instance, int i) {
+        if (!isDuplicating || !this.input.getStack(0).isOf(Items.BOOK)) {
+            instance.set(i);
         }
     }
 
